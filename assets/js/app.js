@@ -1,53 +1,32 @@
 // ------------------- Variables
-const listaVacia = document.querySelector('input[value="Sin tareas pendientes ❤️"]');
+const formulario = document.querySelector('#formulario');
 const tarea = document.querySelector('#tarea');
-const lista = document.querySelector('#list');
+const listaTareas = document.querySelector('#lista-tareas');
+const listaTareasTemplate = document.querySelector('#lista-tareas-template').content;
+const fragmentlistaTareasTemplate = document.createDocumentFragment();
 
 // ------------------- Funciones
-const agregarTarea = (tarea) => {
-    if(lista.firstElementChild === listaVacia) {
-        lista.textContent = '';
-    }
+const agregarTarea = () => {
+    const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
 
-    const nuevaTarea = Object.assign(
-        document.createElement('input'),
-        { 
-            type: 'text',
-            disabled: true,
-            value: capitalize(tarea.value),
-            // Se puede pasar el conjunto de clases como key:value de classList
-            // classList: 'form-control text-start bg-warning-subtle text-warning-emphasis mb-2'
-        }
-    );
+    clonListaTareasTemplate.querySelector('.alert p').textContent = capitalize(tarea.value.trim());
 
-    tarea.value = '';
+    fragmentlistaTareasTemplate.appendChild(clonListaTareasTemplate);
+    listaTareas.appendChild(fragmentlistaTareasTemplate);
 
-    // Pero se practicó el uso del spread operator y el split
-    nuevaTarea.classList.add(...'form-control text-start bg-warning-subtle text-warning-emphasis mb-2'.split(' '));
-
-    lista.appendChild(nuevaTarea);
+    formulario.reset();
 };
 
 const capitalize = (word) => `${word.charAt(0).toUpperCase()}${word.toLowerCase().slice(1)}`;
 
 // ------------------- Delegación de eventos
 //
-// ------------------- Al cargar
-window.addEventListener('keypress', (e) => {
-    e.stopPropagation();
-    
-    if(e.key === 'Enter') {
-        agregarTarea(tarea);
-    }
-});
-
-// ------------------- Al hacer click
-document.body.firstElementChild.addEventListener('click', (e) => {
+// ------------------- Al hacer submit
+formulario.addEventListener('submit', (e) => {
+    e.preventDefault();
     e.stopPropagation();
 
-    const fuenteEvento = e.target;
-
-    if(fuenteEvento.id === 'agregar-tarea') {
-        agregarTarea(tarea);
+    if(tarea.value.trim().length > 0) {
+        agregarTarea();
     }
 });
