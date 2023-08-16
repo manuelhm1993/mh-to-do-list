@@ -51,25 +51,6 @@ const formatearTarea = (tarea) => {
 
 // ------------------- Delegación de eventos
 //
-// ------------------- Al soltar la tecla (backspace solo funciona con keyup)
-const keyup = (e) =>{
-    e.stopPropagation();
-
-    const fuenteEvento = e.target;
-
-    // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
-    if((fuenteEvento.value.trim().length > 0) && fuenteEvento.classList.contains('is-invalid')) {
-        fuenteEvento.classList.remove('is-invalid');
-        fuenteEvento.classList.add('is-valid');
-    }
-
-    // ------------------- Si al borrar el campo queda vacío, es inválido
-    if((e.code === 'Backspace') && (fuenteEvento.value.trim().length === 0) && (fuenteEvento.classList.contains('is-valid'))) {
-        fuenteEvento.classList.add('is-invalid');
-        fuenteEvento.classList.remove('is-valid');
-    }
-};
-
 // ------------------- Al hacer submit
 const submit = (e) =>{
     e.preventDefault();
@@ -85,6 +66,30 @@ const submit = (e) =>{
     else {
         fuenteEvento['tarea'].classList.add('is-invalid');
         fuenteEvento.reset();
+    }
+
+    fuenteEvento['tarea'].focus();
+};
+
+// ------------------- Al soltar la tecla (backspace solo funciona con keyup)
+const keyup = (e) =>{
+    e.stopPropagation();
+
+    const fuenteEvento = e.target;
+
+    // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
+    if((fuenteEvento.value.trim().length > 0) 
+    && (fuenteEvento.classList.contains('is-invalid'))) {
+        fuenteEvento.classList.remove('is-invalid');
+        fuenteEvento.classList.add('is-valid');
+    }
+
+    // ------------------- Si al borrar el campo queda vacío, es inválido
+    if((e.code === 'Backspace') 
+    && (fuenteEvento.value.trim().length === 0) 
+    && (fuenteEvento.classList.contains('is-valid'))) {
+        fuenteEvento.classList.add('is-invalid');
+        fuenteEvento.classList.remove('is-valid');
     }
 };
 
@@ -105,6 +110,8 @@ const change = (e) =>{
         fuenteEvento.classList.remove('is-valid');
         formulario.reset();
     }
+
+    fuenteEvento['tarea'].focus();
 };
 
 // ------------------- Asociar varios eventos a un mismo elemento
@@ -113,15 +120,12 @@ const change = (e) =>{
         switch(eventType) {
             case 'submit':
                 submit(e);
-                console.log('submit');
                 break;
             case 'keyup':
                 keyup(e);
-                console.log('keyup');
                 break;
             case 'change':
                 change(e);
-                console.log('change');
                 break;
         }
     });
