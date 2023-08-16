@@ -13,8 +13,10 @@ const tareas = {};
 const agregarTarea = () => {
     const nuevaTarea = {
         // ------------------- Devolver un número aleatorio entre 0-1 convertirlo a alfanumérico y elimnar la parte entera y el .
-        id: Math.random().toString(36).substring(2),
-        title: capitalize(tarea.value.trim())
+        // ------------------- Devolver el milisegundo de creación y unir ambas cosas en una cadena para un uuid único
+        id: Math.random().toString(36).substring(2) + Date.now(),
+        title: capitalize(tarea.value.trim()),
+        status: false
     };
 
     // ------------------- Crear la nueva tarea en la lista
