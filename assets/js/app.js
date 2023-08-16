@@ -4,12 +4,13 @@ const listaTareas = document.querySelector('#lista-tareas');
 const listaTareasTemplate = document.querySelector('#lista-tareas-template').content;
 const fragmentlistaTareasTemplate = document.createDocumentFragment();
 
+// ------------------- Colección de tareas
 const tareas = {};
 
 // ------------------- Funciones
 // 
 // ------------------- Crear una nueva tarea en el objeto tareas
-const agregarTarea = (tarea) => {
+const crearTarea = (tarea) => {
     const nuevaTarea = {
         // ------------------- Devolver un número aleatorio entre 0-1 convertirlo a alfanumérico y elimnar la parte entera y el .
         // ------------------- Devolver el milisegundo de creación y unir ambas cosas en una cadena para un uuid único
@@ -22,7 +23,25 @@ const agregarTarea = (tarea) => {
     tareas[nuevaTarea.id] = { ...nuevaTarea };
 
     renderizarTareas();
-    formulario.reset();
+};
+
+// ------------------- Actualiza la tarea del id especificado
+const actualizarTarea = (botonAccion) => {
+    // ------------------- Modificar el status de la tarea a terminado o no terminado
+    tareas[botonAccion.dataset.idTarea].status = !tareas[botonAccion.dataset.idTarea].status;
+
+    // ------------------- Comprobar que botón de acción es, para mostrarlo u ocultarlo
+    if(botonAccion.classList.contains('fa-circle-check')) {
+        botonAccion.classList.toggle('d-none');
+        botonAccion.previousElementSibling.classList.toggle('d-none');
+    }
+    else if(botonAccion.classList.contains('fa-arrow-rotate-left')) {
+        botonAccion.classList.toggle('d-none');
+        botonAccion.nextElementSibling.classList.toggle('d-none');
+    }
+
+    // ------------------- Tachar o destachar la tarea dependiendo del botón de acción
+    listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`).classList.toggle('text-decoration-line-through');
 };
 
 // ------------------- Renderizar el listado de tareas
@@ -31,9 +50,15 @@ const renderizarTareas = () => {
 
     Object.values(tareas).forEach((tarea) => {
         const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
+        const pTitle = clonListaTareasTemplate.querySelector('.alert p');
 
-        clonListaTareasTemplate.querySelector('.alert p').id = tareas[tarea.id].id;
-        clonListaTareasTemplate.querySelector('.alert p').textContent = tareas[tarea.id].title;
+        pTitle.textContent = tareas[tarea.id].title;
+        pTitle.dataset.idTarea = tareas[tarea.id].id;
+
+        // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
+        clonListaTareasTemplate.querySelectorAll('.alert h3 i').forEach((tagI) => {
+            tagI.dataset.idTarea = tareas[tarea.id].id;
+        });
 
         fragmentlistaTareasTemplate.appendChild(clonListaTareasTemplate);
     });
@@ -51,23 +76,38 @@ const formatearTarea = (tarea) => {
 
 // ------------------- Delegación de eventos
 //
+// ------------------- Al hacer click
+listaTareas.addEventListener('click', (e) => {
+    const fuenteEvento = e.target;
+
+    if(fuenteEvento.matches('.fa-circle-check')
+    || fuenteEvento.matches('.fa-arrow-rotate-left')) {
+        actualizarTarea(fuenteEvento);
+    }
+    else if(fuenteEvento.matches('.fa-circle-minus')) {
+        console.log('Tarea eliminada');
+    }
+});
+
 // ------------------- Al hacer submit
 const submit = (e) =>{
     e.preventDefault();
 
     const fuenteEvento = e.target;
 
-    if(fuenteEvento['tarea'].value.trim().length > 0) {
-        agregarTarea(fuenteEvento['tarea']);
-
-        // ------------------- Quitar las clases de validación al crear la tarea
-        formatearTarea(fuenteEvento['tarea']);
-    }
-    else {
+    // ------------------- Validación required y espacios en blanco
+    if(fuenteEvento['tarea'].value.trim().length === 0) {
         fuenteEvento['tarea'].classList.add('is-invalid');
-        fuenteEvento.reset();
+        fuenteEvento['tarea'].focus();
+
+        // ------------------- Si no pasa la validación se
+        return;
     }
 
+    crearTarea(fuenteEvento['tarea']);
+    formatearTarea(fuenteEvento['tarea']);
+
+    fuenteEvento.reset();
     fuenteEvento['tarea'].focus();
 };
 
@@ -111,7 +151,7 @@ const change = (e) =>{
         formulario.reset();
     }
 
-    fuenteEvento['tarea'].focus();
+    fuenteEvento.focus();
 };
 
 // ------------------- Asociar varios eventos a un mismo elemento
