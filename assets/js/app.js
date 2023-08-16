@@ -7,7 +7,17 @@ const fragmentlistaTareasTemplate = document.createDocumentFragment();
 // ------------------- Colección de tareas
 const tareas = {};
 
-// ------------------- Funciones
+// ------------------- Funciones globales
+//
+// ------------------- Formatear a capitalize la tarea
+const capitalize = (word) => `${word.charAt(0).toUpperCase()}${word.toLowerCase().substring(1)}`;
+
+// ------------------- Limpia las clases de validación en el input
+const formatearTarea = (tarea) => {
+    tarea.classList.remove('is-invalid', 'is-valid');
+};
+
+// ------------------- Funciones CRUD
 // 
 // ------------------- Crear una nueva tarea en el objeto tareas
 const crearTarea = (tarea) => {
@@ -22,7 +32,39 @@ const crearTarea = (tarea) => {
     // ------------------- Crear la nueva tarea en la lista
     tareas[nuevaTarea.id] = { ...nuevaTarea };
 
-    renderizarTareas();
+    leerTareas();
+};
+
+// ------------------- Renderizar el listado de tareas
+const leerTareas = () => {
+    listaTareas.textContent = '';
+
+    Object.values(tareas).forEach((tarea) => {
+        const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
+        const pTitle = clonListaTareasTemplate.querySelector('.alert p');
+
+        pTitle.textContent = tareas[tarea.id].title;
+        pTitle.dataset.idTarea = tareas[tarea.id].id;
+
+        // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
+        clonListaTareasTemplate.querySelectorAll('.alert h3 i').forEach((tagI) => {
+            // ------------------- Comprobar si la tarea está terminada
+            if((tareas[tarea.id].status)) {
+                // ------------------- Asignar las clases correspondientes al status
+                pTitle.classList.toggle('text-decoration-line-through');
+
+                if(tagI.matches('.fa-arrow-rotate-left') || tagI.matches('.fa-circle-check')) {
+                    tagI.classList.toggle('d-none');
+                }
+            }
+
+            tagI.dataset.idTarea = tareas[tarea.id].id;
+        });
+
+        fragmentlistaTareasTemplate.appendChild(clonListaTareasTemplate);
+    });
+
+    listaTareas.appendChild(fragmentlistaTareasTemplate);
 };
 
 // ------------------- Actualiza la tarea del id especificado
@@ -59,64 +101,11 @@ const modificarTarea = (botonAccion) => {
 // ------------------- Elimina la tarea del id especificado
 const eliminarTarea = (idTarea) => {
     delete tareas[idTarea];
-    renderizarTareas();
+    leerTareas();
 };
 
-// ------------------- Renderizar el listado de tareas
-const renderizarTareas = () => {
-    listaTareas.textContent = '';
-
-    Object.values(tareas).forEach((tarea) => {
-        const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
-        const pTitle = clonListaTareasTemplate.querySelector('.alert p');
-
-        pTitle.textContent = tareas[tarea.id].title;
-        pTitle.dataset.idTarea = tareas[tarea.id].id;
-
-        // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
-        clonListaTareasTemplate.querySelectorAll('.alert h3 i').forEach((tagI) => {
-            // ------------------- Comprobar si la tarea está terminada
-            if((tareas[tarea.id].status)) {
-                // ------------------- Asignar las clases correspondientes al status
-                pTitle.classList.toggle('text-decoration-line-through');
-
-                if(tagI.matches('.fa-arrow-rotate-left') || tagI.matches('.fa-circle-check')) {
-                    tagI.classList.toggle('d-none');
-                }
-            }
-
-            tagI.dataset.idTarea = tareas[tarea.id].id;
-        });
-
-        fragmentlistaTareasTemplate.appendChild(clonListaTareasTemplate);
-    });
-
-    listaTareas.appendChild(fragmentlistaTareasTemplate);
-};
-
-// ------------------- Formatear a capitalize la tarea
-const capitalize = (word) => `${word.charAt(0).toUpperCase()}${word.toLowerCase().substring(1)}`;
-
-// ------------------- Limpia las clases de validación en el input
-const formatearTarea = (tarea) => {
-    tarea.classList.remove('is-invalid', 'is-valid');
-};
-
-// ------------------- Delegación de eventos
-//
-// ------------------- Al hacer click
-listaTareas.addEventListener('click', (e) => {
-    const fuenteEvento = e.target;
-
-    if(fuenteEvento.matches('.fa-circle-check')
-    || fuenteEvento.matches('.fa-arrow-rotate-left')) {
-        modificarTarea(fuenteEvento);
-    }
-    else if(fuenteEvento.matches('.fa-circle-minus')) {
-        eliminarTarea(fuenteEvento.dataset.idTarea);
-    }
-});
-
+// ------------------- Funciones de eventos
+// 
 // ------------------- Al hacer submit
 const submit = (e) =>{
     e.preventDefault();
@@ -181,6 +170,21 @@ const change = (e) =>{
 
     fuenteEvento.focus();
 };
+
+// ------------------- Delegación de eventos
+//
+// ------------------- Al hacer click
+listaTareas.addEventListener('click', (e) => {
+    const fuenteEvento = e.target;
+
+    if(fuenteEvento.matches('.fa-circle-check')
+    || fuenteEvento.matches('.fa-arrow-rotate-left')) {
+        modificarTarea(fuenteEvento);
+    }
+    else if(fuenteEvento.matches('.fa-circle-minus')) {
+        eliminarTarea(fuenteEvento.dataset.idTarea);
+    }
+});
 
 // ------------------- Asociar varios eventos a un mismo elemento
 ['submit', 'keyup', 'change'].forEach((eventType) => {
