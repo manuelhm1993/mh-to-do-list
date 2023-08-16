@@ -26,7 +26,7 @@ const crearTarea = (tarea) => {
 };
 
 // ------------------- Actualiza la tarea del id especificado
-const actualizarTarea = (botonAccion) => {
+const modificarTarea = (botonAccion) => {
     // ------------------- Modificar el status de la tarea a terminado o no terminado
     tareas[botonAccion.dataset.idTarea].status = !tareas[botonAccion.dataset.idTarea].status;
 
@@ -41,7 +41,25 @@ const actualizarTarea = (botonAccion) => {
     }
 
     // ------------------- Tachar o destachar la tarea dependiendo del botón de acción
-    listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`).classList.toggle('text-decoration-line-through');
+    const cuerpoTarea = listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`);
+
+    cuerpoTarea.classList.toggle('text-decoration-line-through');
+
+    // ------------------- Acceder a la tarea para realizar su actualización
+    /* if(tareas[botonAccion.dataset.idTarea].status) {
+        formulario.querySelector('#tarea').value = cuerpoTarea.textContent;
+        formulario.querySelector('#agregar-tarea').textContent = 'Modificar';
+    }
+    else {
+        formulario.querySelector('#tarea').value = '';
+        formulario.querySelector('#agregar-tarea').textContent = 'Agregar';
+    } */
+};
+
+// ------------------- Elimina la tarea del id especificado
+const eliminarTarea = (idTarea) => {
+    delete tareas[idTarea];
+    renderizarTareas();
 };
 
 // ------------------- Renderizar el listado de tareas
@@ -92,10 +110,10 @@ listaTareas.addEventListener('click', (e) => {
 
     if(fuenteEvento.matches('.fa-circle-check')
     || fuenteEvento.matches('.fa-arrow-rotate-left')) {
-        actualizarTarea(fuenteEvento);
+        modificarTarea(fuenteEvento);
     }
     else if(fuenteEvento.matches('.fa-circle-minus')) {
-        console.log('Tarea eliminada');
+        eliminarTarea(fuenteEvento.dataset.idTarea);
     }
 });
 
