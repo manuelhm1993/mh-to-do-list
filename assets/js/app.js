@@ -57,6 +57,16 @@ const renderizarTareas = () => {
 
         // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
         clonListaTareasTemplate.querySelectorAll('.alert h3 i').forEach((tagI) => {
+            // ------------------- Comprobar si la tarea está terminada
+            if((tareas[tarea.id].status)) {
+                // ------------------- Asignar las clases correspondientes al status
+                pTitle.classList.toggle('text-decoration-line-through');
+
+                if(tagI.matches('.fa-arrow-rotate-left') || tagI.matches('.fa-circle-check')) {
+                    tagI.classList.toggle('d-none');
+                }
+            }
+
             tagI.dataset.idTarea = tareas[tarea.id].id;
         });
 
