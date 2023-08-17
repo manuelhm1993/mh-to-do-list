@@ -17,6 +17,19 @@ const formatearTarea = (tarea) => {
     tarea.classList.remove('is-invalid', 'is-valid');
 };
 
+// ------------------- Obtener el array tareas del localStorage
+const getTareasLocalStorage = () => {
+    if(localStorage.getItem('tareas')) {
+        tareas = JSON.parse(localStorage.getItem('tareas'));
+        leerTareas();
+    }
+};
+
+// ------------------- Establecer el array tareas en el localStorage
+const setTareasLocalStorage = () => {
+    localStorage.setItem('tareas', JSON.stringify(tareas));
+};
+
 // ------------------- Funciones CRUD
 // 
 // ------------------- Crear una nueva tarea en el objeto tareas
@@ -66,8 +79,7 @@ const leerTareas = () => {
 
     listaTareas.appendChild(fragmentlistaTareasTemplate);
 
-    // ------------------- Modificar el localStorage
-    localStorage.setItem('tareas', JSON.stringify(tareas));
+    setTareasLocalStorage();
 };
 
 // ------------------- Modifica el estado de la tarea del id especificado
@@ -90,8 +102,7 @@ const modificarStatusTarea = (botonAccion) => {
 
     cuerpoTarea.classList.toggle('text-decoration-line-through');
 
-    // ------------------- Modificar el localStorage
-    localStorage.setItem('tareas', JSON.stringify(tareas));
+    setTareasLocalStorage();
 };
 
 // ------------------- Acceder a la tarea para realizar su actualización
@@ -226,10 +237,7 @@ const change = (e) =>{
 //
 // ------------------- Al cargar el documento
 document.addEventListener('DOMContentLoaded', (e) => {
-    if(localStorage.getItem('tareas')) {
-        tareas = JSON.parse(localStorage.getItem('tareas'));
-        leerTareas();
-    }
+    getTareasLocalStorage();
 });
 
 // ------------------- Al hacer click
