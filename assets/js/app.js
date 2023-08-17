@@ -177,11 +177,20 @@ const submit = (e) =>{
     const fuenteEvento = e.target;
 
     // ------------------- Validación required y espacios en blanco
-    if(fuenteEvento['tarea'].value.trim().length === 0) {
-        fuenteEvento['tarea'].classList.add('is-invalid');
-        fuenteEvento['tarea'].focus();
+    if((fuenteEvento['titulo-tarea'].value.trim().length === 0) 
+    || (fuenteEvento['tarea'].value.trim().length === 0)) {
+        // ------------------- Título
+        if(fuenteEvento['titulo-tarea'].value.trim().length === 0) {
+            fuenteEvento['titulo-tarea'].classList.add('is-invalid');
+        }
+    
+        // ------------------- Cuerpo
+        if(fuenteEvento['tarea'].value.trim().length === 0) {
+            fuenteEvento['tarea'].classList.add('is-invalid');
+        }
 
-        // ------------------- Si no pasa la validación se
+        fuenteEvento['titulo-tarea'].focus();
+
         return;
     }
 
@@ -189,7 +198,7 @@ const submit = (e) =>{
     formatearTarea(fuenteEvento['tarea']);
 
     fuenteEvento.reset();
-    fuenteEvento['tarea'].focus();
+    fuenteEvento['titulo-tarea'].focus();
 };
 
 // ------------------- Al soltar la tecla (backspace solo funciona con keyup)
