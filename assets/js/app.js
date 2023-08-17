@@ -131,6 +131,15 @@ const eliminarTarea = (idTarea) => {
     delete tareas[idTarea];
     leerTareas();
     formulario.firstElementChild.focus();
+
+    const botonAccion = formulario.querySelector('#agregar-tarea');
+
+    // ------------------- Validar que no se esté modificando
+    if(botonAccion.hasAttribute('data-id-tarea')) {
+        botonAccion.textContent = 'Agregar';
+        botonAccion.removeAttribute('data-id-tarea');
+        formulario.reset();
+    }
 };
 
 // ------------------- Funciones de eventos
