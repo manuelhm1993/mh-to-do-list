@@ -5,7 +5,7 @@ const listaTareasTemplate = document.querySelector('#lista-tareas-template').con
 const fragmentlistaTareasTemplate = document.createDocumentFragment();
 
 // ------------------- Colección de tareas
-const tareas = {};
+let tareas = {};
 
 // ------------------- Funciones globales
 //
@@ -65,6 +65,9 @@ const leerTareas = () => {
     });
 
     listaTareas.appendChild(fragmentlistaTareasTemplate);
+
+    // ------------------- Modificar el localStorage
+    localStorage.setItem('tareas', JSON.stringify(tareas));
 };
 
 // ------------------- Modifica el estado de la tarea del id especificado
@@ -142,6 +145,11 @@ const eliminarTarea = (idTarea) => {
         botonAccion.removeAttribute('data-id-tarea');
         formulario.reset();
     }
+
+    // --------------- Si no hay tareas en la lista, eliminar el localStorage
+    if(Object.values(tareas).length === 0) {
+        localStorage.removeItem("tareas");
+    }
 };
 
 // ------------------- Funciones de eventos
@@ -213,6 +221,14 @@ const change = (e) =>{
 
 // ------------------- Delegación de eventos
 //
+// ------------------- Al cargar el documento
+document.addEventListener('DOMContentLoaded', (e) => {
+    if(localStorage.getItem('tareas')) {
+        tareas = JSON.parse(localStorage.getItem('tareas'));
+        leerTareas();
+    }
+});
+
 // ------------------- Al hacer click
 listaTareas.parentElement.addEventListener('click', (e) => {
     const fuenteEvento = e.target;
