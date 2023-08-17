@@ -218,21 +218,6 @@ const validarKeyUp = (fuenteEvento, codigoTecla) => {
     }
 };
 
-// ------------------- Al cambiar
-const validarChange = (fuenteEvento) => {
-    // ------------------- Si el input tiene valor y no es un espacio en blando, es válido
-    if(fuenteEvento.value.trim().length > 0) {
-        fuenteEvento.classList.remove('is-invalid');
-        fuenteEvento.classList.add('is-valid');
-    }
-    // ------------------- Si el input tiene está vacío, se resetea el formulario y se coloca el input inválido
-    else {
-        fuenteEvento.classList.add('is-invalid');
-        fuenteEvento.classList.remove('is-valid');
-        formulario.value = '';
-    }
-};
-
 // ------------------- Funciones de eventos
 // 
 // ------------------- Al hacer submit
@@ -271,23 +256,6 @@ const keyup = (e) =>{
 
     if(fuenteEvento.id === 'tarea') {
         validarKeyUp(fuenteEvento, e.code);
-    }
-};
-
-// ------------------- Al cambiar
-const change = (e) =>{
-    e.stopPropagation();
-
-    const fuenteEvento = e.target;
-
-    if(fuenteEvento.id === 'titulo-tarea') {
-        validarChange(fuenteEvento);
-        validarChange(formulario.querySelector('#tarea'));
-    }
-
-    if(fuenteEvento.id === 'tarea') {
-        validarChange(fuenteEvento);
-        validarChange(formulario.querySelector('#titulo-tarea'));
     }
 };
 
@@ -343,9 +311,6 @@ listaTareas.parentElement.addEventListener('click', (e) => {
                 break;
             case 'keyup':
                 keyup(e);
-                break;
-            case 'change':
-                change(e);
                 break;
         }
     });
