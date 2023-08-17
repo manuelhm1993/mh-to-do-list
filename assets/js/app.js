@@ -89,6 +89,9 @@ const modificarStatusTarea = (botonAccion) => {
     const cuerpoTarea = listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`);
 
     cuerpoTarea.classList.toggle('text-decoration-line-through');
+
+    // ------------------- Modificar el localStorage
+    localStorage.setItem('tareas', JSON.stringify(tareas));
 };
 
 // ------------------- Acceder a la tarea para realizar su actualización
