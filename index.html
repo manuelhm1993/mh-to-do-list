@@ -14,14 +14,18 @@
             <h1 class="text-center my-3">MHenriquez - TODO APP</h1>
 
             <form id="formulario" name="formulario" action="#">
-                <input type="text" class="form-control my-2" name="titulo-tarea" id="titulo-tarea" placeholder="Título de la tarea" autofocus>
-                <p class="invalid-feedback">El título no puede estar vacío</p>
+                <div>
+                    <input type="text" class="form-control my-2" name="titulo-tarea" id="titulo-tarea" placeholder="Título de la tarea" tabindex="1" autofocus>
+                    <p class="invalid-feedback">El título no puede estar vacío</p>
+                </div>
 
-                <input type="text" class="form-control my-2" name="tarea" id="tarea" placeholder="Cuerpo de la tarea">
-                <p class="invalid-feedback">La tarea no puede estar vacía</p>
+                <div>
+                    <input type="text" class="form-control my-2" name="tarea" id="tarea" placeholder="Cuerpo de la tarea" tabindex="2">
+                    <p class="invalid-feedback">La tarea no puede estar vacía</p>
+                </div>
 
                 <div class="d-grid gap-2 col-12 col-sm-1 mb-3">
-                    <button class="btn btn-primary" id="agregar-tarea" type="submit">Agregar</button>
+                    <button class="btn btn-primary" id="agregar-tarea" type="submit" tabindex="3">Agregar</button>
                 </div>
             </form>
 
@@ -44,9 +48,9 @@
                 <i class="fa-solid fa-square-minus text-danger" role="button"></i> -->
 
                 <!-- Solicitado por Fanny -->
-                <i class="fa-regular fa-square-check text-success d-none" role="button"></i>
-                <i class="fa-regular fa-square text-success" role="button"></i>
-                <i class="fa-regular fa-square-minus text-danger" role="button"></i>
+                <i class="fa-regular fa-square-check text-success d-none" role="button" tabindex="4"></i>
+                <i class="fa-regular fa-square text-success" role="button" tabindex="5"></i>
+                <i class="fa-regular fa-square-minus text-danger" role="button" tabindex="6"></i>
 
                 <!-- Diseño original -->
                 <!-- <i class="fa-solid fa-arrow-rotate-left text-success d-none" role="button"></i>

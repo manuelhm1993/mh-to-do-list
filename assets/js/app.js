@@ -169,7 +169,7 @@ const eliminarTarea = (idTarea) => {
     
     leerTareas();
 
-    formulario.firstElementChild.focus();
+    formulario.querySelector('#titulo-tarea').focus();
 
     const botonAccion = formulario.querySelector('#agregar-tarea');
 
@@ -202,17 +202,16 @@ const validarSubmit = (fuenteEvento, id) => {
 
 // ------------------- Al soltar la tecla (backspace solo funciona con keyup)
 const validarKeyUp = (fuenteEvento, codigoTecla) => {
-    // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
-    if((fuenteEvento.value.trim().length > 0) 
-    && (fuenteEvento.classList.contains('is-invalid'))) {
+    // ------------------- Validar cuando se escribe
+    if(fuenteEvento.value.trim().length > 0) {
+        // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
         fuenteEvento.classList.remove('is-invalid');
         fuenteEvento.classList.add('is-valid');
     }
 
-    // ------------------- Si al borrar el campo queda vacío, es inválido
-    if((codigoTecla === 'Backspace') 
-    && (fuenteEvento.value.trim().length === 0) 
-    && (fuenteEvento.classList.contains('is-valid'))) {
+    // ------------------- Validar cuando se está borrando
+    if((codigoTecla === 'Backspace') && (fuenteEvento.value.trim().length === 0)) {
+        // ------------------- Si el input quedó vacío, es inválido
         fuenteEvento.classList.remove('is-valid');
         fuenteEvento.classList.add('is-invalid');
     }
@@ -288,8 +287,6 @@ const change = (e) =>{
         validarChange(fuenteEvento);
         validarChange(formulario.querySelector('#titulo-tarea'));
     }
-
-    fuenteEvento.focus();
 };
 
 // ------------------- Delegación de eventos
@@ -326,7 +323,7 @@ listaTareas.parentElement.addEventListener('click', (e) => {
 });
 
 // ------------------- Asociar varios eventos a un mismo elemento
-['submit', 'keyup', 'change'].forEach((eventType) => {
+['submit', 'keyup'].forEach((eventType) => {
     formulario.addEventListener(eventType, (e) => {
         switch(eventType) {
             case 'submit':
