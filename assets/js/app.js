@@ -168,6 +168,35 @@ const eliminarTarea = (idTarea) => {
     }
 };
 
+// ------------------- Funciones de validación
+//
+// ------------------- Al cambiar
+const validarChange = (fuenteEvento) => {
+    // ------------------- Si el input tiene valor y no es un espacio en blando, es válido
+    if(fuenteEvento.value.trim().length > 0) {
+        fuenteEvento.classList.remove('is-invalid');
+        fuenteEvento.classList.add('is-valid');
+    }
+    // ------------------- Si el input tiene está vacío, se resetea el formulario y se coloca el input inválido
+    else {
+        fuenteEvento.classList.add('is-invalid');
+        fuenteEvento.classList.remove('is-valid');
+        formulario.value = '';
+    }
+};
+
+// ------------------- Al hacer submit
+const validarSubmit = (fuenteEvento, id) => {
+    let valido = true;
+
+    if(fuenteEvento[id].value.trim().length === 0) {
+        fuenteEvento[id].classList.add('is-invalid');
+        valido = false;
+    }
+
+    return valido;
+};
+
 // ------------------- Funciones de eventos
 // 
 // ------------------- Al hacer submit
@@ -177,20 +206,12 @@ const submit = (e) =>{
     const fuenteEvento = e.target;
 
     // ------------------- Validación required y espacios en blanco
-    if((fuenteEvento['titulo-tarea'].value.trim().length === 0) 
-    || (fuenteEvento['tarea'].value.trim().length === 0)) {
-        // ------------------- Título
-        if(fuenteEvento['titulo-tarea'].value.trim().length === 0) {
-            fuenteEvento['titulo-tarea'].classList.add('is-invalid');
-        }
-    
-        // ------------------- Cuerpo
-        if(fuenteEvento['tarea'].value.trim().length === 0) {
-            fuenteEvento['tarea'].classList.add('is-invalid');
-        }
+    const validarTitulo = validarSubmit(fuenteEvento, 'titulo-tarea');
+    const validarCuerpo = validarSubmit(fuenteEvento, 'tarea');
 
+    // ------------------- Regresar al formulario si alún campo no cumple la validación
+    if((!validarTitulo) || (!validarCuerpo)) {
         fuenteEvento['titulo-tarea'].focus();
-
         return;
     }
 
@@ -220,6 +241,7 @@ const keyup = (e) =>{
     && (fuenteEvento.classList.contains('is-valid'))) {
         fuenteEvento.classList.add('is-invalid');
         fuenteEvento.classList.remove('is-valid');
+        console.log('entre keyup');
     }
 };
 
@@ -229,16 +251,14 @@ const change = (e) =>{
 
     const fuenteEvento = e.target;
 
-    // ------------------- Si el input tiene valor y no es un espacio en blando, es válido
-    if(fuenteEvento.value.trim().length > 0) {
-        fuenteEvento.classList.remove('is-invalid');
-        fuenteEvento.classList.add('is-valid');
+    if(fuenteEvento.id === 'tarea') {
+        validarChange(fuenteEvento);
+        validarChange(formulario.querySelector('#titulo-tarea'));
     }
-    // ------------------- Si el input tiene está vacío, se resetea el formulario y se coloca el input inválido
-    else {
-        fuenteEvento.classList.add('is-invalid');
-        fuenteEvento.classList.remove('is-valid');
-        formulario.reset();
+
+    if(fuenteEvento.id === 'titulo-tarea') {
+        validarChange(fuenteEvento);
+        validarChange(formulario.querySelector('#tarea'));
     }
 
     fuenteEvento.focus();
