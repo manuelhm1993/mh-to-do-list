@@ -67,8 +67,8 @@ const leerTareas = () => {
     listaTareas.appendChild(fragmentlistaTareasTemplate);
 };
 
-// ------------------- Actualiza la tarea del id especificado
-const modificarTarea = (botonAccion) => {
+// ------------------- Modifica el estado de la tarea del id especificado
+const modificarStatusTarea = (botonAccion) => {
     // ------------------- Modificar el status de la tarea a terminado o no terminado
     tareas[botonAccion.dataset.idTarea].status = !tareas[botonAccion.dataset.idTarea].status;
 
@@ -86,22 +86,51 @@ const modificarTarea = (botonAccion) => {
     const cuerpoTarea = listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`);
 
     cuerpoTarea.classList.toggle('text-decoration-line-through');
+};
 
-    // ------------------- Acceder a la tarea para realizar su actualización
-    /* if(tareas[botonAccion.dataset.idTarea].status) {
-        formulario.querySelector('#tarea').value = cuerpoTarea.textContent;
-        formulario.querySelector('#agregar-tarea').textContent = 'Modificar';
+// ------------------- Acceder a la tarea para realizar su actualización
+const modificarTarea = (idTarea) => {
+    if(tareas[idTarea].status) {
+        formulario.querySelector('#tarea').value = tareas[idTarea].title;
+
+        const botonAccion = formulario.querySelector('#agregar-tarea');
+
+        botonAccion.textContent = 'Modificar';
+        botonAccion.dataset.idTarea = idTarea;
     }
-    else {
-        formulario.querySelector('#tarea').value = '';
-        formulario.querySelector('#agregar-tarea').textContent = 'Agregar';
-    } */
+};
+
+// ------------------- Actualiza la tarea con los parámetros dados
+const actualizarTarea = (botonAccion) => {
+    // ------------------- Actualizar la tarea
+    const tarea = formulario.querySelector('#tarea');
+
+    tareas[botonAccion.dataset.idTarea].status = false;
+    tareas[botonAccion.dataset.idTarea].title = tarea.value;
+
+    // ------------------- Cambiar el estado de los botones
+    listaTareas.querySelectorAll(`i[data-id-tarea="${botonAccion.dataset.idTarea}"]`).forEach((boton) => {
+        if(boton.classList.contains('fa-arrow-rotate-left') 
+        || boton.classList.contains('fa-circle-check')) {
+            boton.classList.toggle('d-none');
+        }
+    });
+
+    // ------------------- Resetear el formulario a su estado base
+    tarea.value = '';
+    botonAccion.textContent = 'Agregar';
+    botonAccion.removeAttribute('data-id-tarea');
+
+    leerTareas();
+    formatearTarea(tarea);
+    tarea.focus();
 };
 
 // ------------------- Elimina la tarea del id especificado
 const eliminarTarea = (idTarea) => {
     delete tareas[idTarea];
     leerTareas();
+    formulario.firstElementChild.focus();
 };
 
 // ------------------- Funciones de eventos
@@ -174,14 +203,27 @@ const change = (e) =>{
 // ------------------- Delegación de eventos
 //
 // ------------------- Al hacer click
-listaTareas.addEventListener('click', (e) => {
+listaTareas.parentElement.addEventListener('click', (e) => {
     const fuenteEvento = e.target;
 
-    if(fuenteEvento.matches('.fa-circle-check')
-    || fuenteEvento.matches('.fa-arrow-rotate-left')) {
-        modificarTarea(fuenteEvento);
+    // ------------------- Terminar tarea
+    if(fuenteEvento.matches('.fa-circle-check')) {
+        modificarStatusTarea(fuenteEvento);
     }
-    else if(fuenteEvento.matches('.fa-circle-minus')) {
+    
+    // ------------------- Modificar tarea
+    if(fuenteEvento.matches('.fa-arrow-rotate-left')) {
+        modificarTarea(fuenteEvento.dataset.idTarea);
+    }
+
+    // ------------------- Actualizar tarea
+    if(fuenteEvento.matches('#agregar-tarea') && (fuenteEvento.textContent === 'Modificar')) {
+        e.preventDefault();
+        actualizarTarea(fuenteEvento);
+    }
+    
+    // ------------------- Eliminar tarea
+    if(fuenteEvento.matches('.fa-circle-minus')) {
         eliminarTarea(fuenteEvento.dataset.idTarea);
     }
 });
