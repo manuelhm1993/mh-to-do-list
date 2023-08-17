@@ -114,6 +114,8 @@ const modificarTarea = (idTarea) => {
 
         botonAccion.textContent = 'Modificar';
         botonAccion.dataset.idTarea = idTarea;
+        
+        formatearTarea(formulario.firstElementChild);
     }
 };
 
@@ -273,10 +275,12 @@ listaTareas.parentElement.addEventListener('click', (e) => {
             case 'submit':
                 const botonAccion = formulario.querySelector('#agregar-tarea');
 
+                // ------------------- Si la actualización se hizo por enter, hace submit
                 if(botonAccion.hasAttribute('data-id-tarea')) {
                     actualizarTarea(botonAccion);
                     return;
                 }
+
                 submit(e);
                 break;
             case 'keyup':
