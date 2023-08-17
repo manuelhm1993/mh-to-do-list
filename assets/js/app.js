@@ -68,7 +68,7 @@ const leerTareas = () => {
         const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
 
         clonListaTareasTemplate.querySelector('.alert h5').textContent = tareas[tarea.id].title;
-        
+
         const pTitle = clonListaTareasTemplate.querySelector('.alert p');
 
         pTitle.textContent = tareas[tarea.id].body;
@@ -123,41 +123,44 @@ const modificarStatusTarea = (botonAccion) => {
 // ------------------- Acceder a la tarea para realizar su actualización
 const modificarTarea = (idTarea) => {
     if(tareas[idTarea].status) {
-        formulario.querySelector('#tarea').value = tareas[idTarea].title;
+        formulario.querySelector('#titulo-tarea').value = tareas[idTarea].title;
+        formulario.querySelector('#tarea').value = tareas[idTarea].body;
 
         const botonAccion = formulario.querySelector('#agregar-tarea');
 
         botonAccion.textContent = 'Modificar';
         botonAccion.dataset.idTarea = idTarea;
         
-        formatearTarea(formulario.firstElementChild);
+        formatearTarea(null, formulario);
     }
 };
 
 // ------------------- Actualiza la tarea con los parámetros dados
 const actualizarTarea = (botonAccion) => {
     // ------------------- Actualizar la tarea
+    const tituloTarea = formulario.querySelector('#titulo-tarea');
     const tarea = formulario.querySelector('#tarea');
 
     tareas[botonAccion.dataset.idTarea].status = false;
-    tareas[botonAccion.dataset.idTarea].title = tarea.value;
+    tareas[botonAccion.dataset.idTarea].title = tituloTarea.value;
+    tareas[botonAccion.dataset.idTarea].body = tarea.value;
 
-    // ------------------- Cambiar el estado de los botones
+    // ------------------- Iterar los botones de acción alert
     listaTareas.querySelectorAll(`i[data-id-tarea="${botonAccion.dataset.idTarea}"]`).forEach((boton) => {
-        if(boton.classList.contains('fa-square-check') 
-        || boton.classList.contains('fa-square')) {
+        // ------------------- Cambiar el estado de los botones
+        if(boton.classList.contains('fa-square-check') || boton.classList.contains('fa-square')) {
             boton.classList.toggle('d-none');
         }
     });
 
     // ------------------- Resetear el formulario a su estado base
-    tarea.value = '';
+    formulario.reset();
     botonAccion.textContent = 'Agregar';
     botonAccion.removeAttribute('data-id-tarea');
 
     leerTareas();
-    formatearTarea(tarea);
-    tarea.focus();
+    formatearTarea(null, formulario);
+    tituloTarea.focus();
 };
 
 // ------------------- Elimina la tarea del id especificado
