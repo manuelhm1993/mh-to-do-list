@@ -13,8 +13,19 @@ let tareas = {};
 const capitalize = (word) => `${word.charAt(0).toUpperCase()}${word.toLowerCase().substring(1)}`;
 
 // ------------------- Limpia las clases de validación en el input
-const formatearTarea = (tarea) => {
-    tarea.classList.remove('is-invalid', 'is-valid');
+const formatearTarea = (tarea, formulario = null) => {
+
+    if(!formulario) {
+        tarea.classList.remove('is-invalid', 'is-valid');
+        return;
+    }
+
+    // ------------------- Forma de iterar un formulario sin FormData
+    [...formulario].forEach(input => {
+        if(input.tagName !== 'BUTTON') {
+            input.classList.remove('is-invalid', 'is-valid');
+        }
+    });
 };
 
 // ------------------- Obtener el array tareas del localStorage
@@ -38,7 +49,8 @@ const crearTarea = (tarea) => {
         // ------------------- Devolver un número aleatorio entre 0-1 convertirlo a alfanumérico y elimnar la parte entera y el .
         // ------------------- Devolver el milisegundo de creación y unir ambas cosas en una cadena para un uuid único
         id: Math.random().toString(36).substring(2) + Date.now(),
-        title: capitalize(tarea.value.trim()),
+        title: capitalize(tarea['titulo-tarea'].value.trim()),
+        body: tarea['tarea'].value.trim(),
         status: false
     };
 
@@ -54,9 +66,12 @@ const leerTareas = () => {
 
     Object.values(tareas).forEach((tarea) => {
         const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
+
+        clonListaTareasTemplate.querySelector('.alert h5').textContent = tareas[tarea.id].title;
+        
         const pTitle = clonListaTareasTemplate.querySelector('.alert p');
 
-        pTitle.textContent = tareas[tarea.id].title;
+        pTitle.textContent = tareas[tarea.id].body;
         pTitle.dataset.idTarea = tareas[tarea.id].id;
 
         // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
@@ -170,6 +185,36 @@ const eliminarTarea = (idTarea) => {
 
 // ------------------- Funciones de validación
 //
+// ------------------- Al hacer submit
+const validarSubmit = (fuenteEvento, id) => {
+    let valido = true;
+
+    if(fuenteEvento[id].value.trim().length === 0) {
+        fuenteEvento[id].classList.add('is-invalid');
+        valido = false;
+    }
+
+    return valido;
+};
+
+// ------------------- Al soltar la tecla (backspace solo funciona con keyup)
+const validarKeyUp = (fuenteEvento, codigoTecla) => {
+    // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
+    if((fuenteEvento.value.trim().length > 0) 
+    && (fuenteEvento.classList.contains('is-invalid'))) {
+        fuenteEvento.classList.remove('is-invalid');
+        fuenteEvento.classList.add('is-valid');
+    }
+
+    // ------------------- Si al borrar el campo queda vacío, es inválido
+    if((codigoTecla === 'Backspace') 
+    && (fuenteEvento.value.trim().length === 0) 
+    && (fuenteEvento.classList.contains('is-valid'))) {
+        fuenteEvento.classList.remove('is-valid');
+        fuenteEvento.classList.add('is-invalid');
+    }
+};
+
 // ------------------- Al cambiar
 const validarChange = (fuenteEvento) => {
     // ------------------- Si el input tiene valor y no es un espacio en blando, es válido
@@ -183,18 +228,6 @@ const validarChange = (fuenteEvento) => {
         fuenteEvento.classList.remove('is-valid');
         formulario.value = '';
     }
-};
-
-// ------------------- Al hacer submit
-const validarSubmit = (fuenteEvento, id) => {
-    let valido = true;
-
-    if(fuenteEvento[id].value.trim().length === 0) {
-        fuenteEvento[id].classList.add('is-invalid');
-        valido = false;
-    }
-
-    return valido;
 };
 
 // ------------------- Funciones de eventos
@@ -215,8 +248,8 @@ const submit = (e) =>{
         return;
     }
 
-    crearTarea(fuenteEvento['tarea']);
-    formatearTarea(fuenteEvento['tarea']);
+    crearTarea(fuenteEvento);
+    formatearTarea(null, fuenteEvento);
 
     fuenteEvento.reset();
     fuenteEvento['titulo-tarea'].focus();
@@ -228,20 +261,12 @@ const keyup = (e) =>{
 
     const fuenteEvento = e.target;
 
-    // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
-    if((fuenteEvento.value.trim().length > 0) 
-    && (fuenteEvento.classList.contains('is-invalid'))) {
-        fuenteEvento.classList.remove('is-invalid');
-        fuenteEvento.classList.add('is-valid');
+    if(fuenteEvento.id === 'titulo-tarea') {
+        validarKeyUp(fuenteEvento, e.code);
     }
 
-    // ------------------- Si al borrar el campo queda vacío, es inválido
-    if((e.code === 'Backspace') 
-    && (fuenteEvento.value.trim().length === 0) 
-    && (fuenteEvento.classList.contains('is-valid'))) {
-        fuenteEvento.classList.add('is-invalid');
-        fuenteEvento.classList.remove('is-valid');
-        console.log('entre keyup');
+    if(fuenteEvento.id === 'tarea') {
+        validarKeyUp(fuenteEvento, e.code);
     }
 };
 
@@ -251,14 +276,14 @@ const change = (e) =>{
 
     const fuenteEvento = e.target;
 
-    if(fuenteEvento.id === 'tarea') {
-        validarChange(fuenteEvento);
-        validarChange(formulario.querySelector('#titulo-tarea'));
-    }
-
     if(fuenteEvento.id === 'titulo-tarea') {
         validarChange(fuenteEvento);
         validarChange(formulario.querySelector('#tarea'));
+    }
+
+    if(fuenteEvento.id === 'tarea') {
+        validarChange(fuenteEvento);
+        validarChange(formulario.querySelector('#titulo-tarea'));
     }
 
     fuenteEvento.focus();
