@@ -66,7 +66,7 @@ const leerTareas = () => {
                 // ------------------- Asignar las clases correspondientes al status
                 pTitle.classList.toggle('text-decoration-line-through');
 
-                if(tagI.matches('.fa-arrow-rotate-left') || tagI.matches('.fa-circle-check')) {
+                if(tagI.matches('.fa-square-check') || tagI.matches('.fa-square')) {
                     tagI.classList.toggle('d-none');
                 }
             }
@@ -88,11 +88,11 @@ const modificarStatusTarea = (botonAccion) => {
     tareas[botonAccion.dataset.idTarea].status = !tareas[botonAccion.dataset.idTarea].status;
 
     // ------------------- Comprobar que botón de acción es, para mostrarlo u ocultarlo
-    if(botonAccion.classList.contains('fa-circle-check')) {
+    if(botonAccion.classList.contains('fa-square')) {
         botonAccion.classList.toggle('d-none');
         botonAccion.previousElementSibling.classList.toggle('d-none');
     }
-    else if(botonAccion.classList.contains('fa-arrow-rotate-left')) {
+    else if(botonAccion.classList.contains('fa-square-check')) {
         botonAccion.classList.toggle('d-none');
         botonAccion.nextElementSibling.classList.toggle('d-none');
     }
@@ -129,8 +129,8 @@ const actualizarTarea = (botonAccion) => {
 
     // ------------------- Cambiar el estado de los botones
     listaTareas.querySelectorAll(`i[data-id-tarea="${botonAccion.dataset.idTarea}"]`).forEach((boton) => {
-        if(boton.classList.contains('fa-arrow-rotate-left') 
-        || boton.classList.contains('fa-circle-check')) {
+        if(boton.classList.contains('fa-square-check') 
+        || boton.classList.contains('fa-square')) {
             boton.classList.toggle('d-none');
         }
     });
@@ -247,12 +247,12 @@ listaTareas.parentElement.addEventListener('click', (e) => {
     const fuenteEvento = e.target;
 
     // ------------------- Terminar tarea
-    if(fuenteEvento.matches('.fa-circle-check')) {
+    if(fuenteEvento.matches('.fa-square')) {
         modificarStatusTarea(fuenteEvento);
     }
     
     // ------------------- Modificar tarea
-    if(fuenteEvento.matches('.fa-arrow-rotate-left')) {
+    if(fuenteEvento.matches('.fa-square-check')) {
         modificarTarea(fuenteEvento.dataset.idTarea);
     }
 
@@ -263,7 +263,7 @@ listaTareas.parentElement.addEventListener('click', (e) => {
     }
     
     // ------------------- Eliminar tarea
-    if(fuenteEvento.matches('.fa-circle-minus')) {
+    if(fuenteEvento.matches('.fa-square-minus')) {
         eliminarTarea(fuenteEvento.dataset.idTarea);
     }
 });
