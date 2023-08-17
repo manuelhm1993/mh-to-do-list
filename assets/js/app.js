@@ -129,7 +129,9 @@ const actualizarTarea = (botonAccion) => {
 // ------------------- Elimina la tarea del id especificado
 const eliminarTarea = (idTarea) => {
     delete tareas[idTarea];
+    
     leerTareas();
+
     formulario.firstElementChild.focus();
 
     const botonAccion = formulario.querySelector('#agregar-tarea');
@@ -242,6 +244,12 @@ listaTareas.parentElement.addEventListener('click', (e) => {
     formulario.addEventListener(eventType, (e) => {
         switch(eventType) {
             case 'submit':
+                const botonAccion = formulario.querySelector('#agregar-tarea');
+
+                if(botonAccion.hasAttribute('data-id-tarea')) {
+                    actualizarTarea(botonAccion);
+                    return;
+                }
                 submit(e);
                 break;
             case 'keyup':
