@@ -238,6 +238,7 @@ const validarChange = (fuenteEvento) => {
 // ------------------- Al hacer submit
 const submit = (e) =>{
     e.preventDefault();
+    e.stopPropagation();
 
     const fuenteEvento = e.target;
 
@@ -299,6 +300,8 @@ document.addEventListener('DOMContentLoaded', (e) => {
 
 // ------------------- Al hacer click
 listaTareas.parentElement.addEventListener('click', (e) => {
+    e.stopPropagation();
+
     const fuenteEvento = e.target;
 
     // ------------------- Terminar tarea
