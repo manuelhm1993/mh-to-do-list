@@ -61,17 +61,12 @@ const leerTareas = () => {
     Object.values(tareas).forEach((tarea) => {
         const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
 
+        // ------------------- Comprobar el status de la tarea
         if(tareas[tarea.id].status) {
             const alert = clonListaTareasTemplate.querySelector('.alert');
     
-            if(alert.classList.contains('alert-warning')) {
-                alert.classList.remove('alert-warning');
-                alert.classList.add('alert-info');
-            }
-            else {
-                alert.classList.remove('alert-info');
-                alert.classList.add('alert-warning');
-            }
+            // ------------------- Cambiar el color del alert
+            alert.classList.replace('alert-warning', 'alert-info');
         }
 
         clonListaTareasTemplate.querySelector('.alert h5').textContent = tareas[tarea.id].title;
