@@ -3,6 +3,7 @@ const formulario = document.querySelector('#formulario');
 const listaTareas = document.querySelector('#lista-tareas');
 const listaTareasTemplate = document.querySelector('#lista-tareas-template').content;
 const fragmentlistaTareasTemplate = document.createDocumentFragment();
+const listaVacia = document.querySelector('#lista-tareas .alert-success');
 
 // ------------------- Colección de tareas
 let tareas = {};
@@ -170,6 +171,7 @@ const eliminarTarea = (idTarea) => {
     // --------------- Si no hay tareas en la lista, eliminar el localStorage
     if(Object.values(tareas).length === 0) {
         localStorage.removeItem("tareas");
+        listaTareas.appendChild(listaVacia);
     }
 };
 
