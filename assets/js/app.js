@@ -193,15 +193,13 @@ const validarKeyUp = (fuenteEvento, codigoTecla) => {
     // ------------------- Validar cuando se escribe
     if(fuenteEvento.value.trim().length > 0) {
         // ------------------- Si el input tiene valor y no es un espacio en blanco es válido
-        fuenteEvento.classList.remove('is-invalid');
-        fuenteEvento.classList.add('is-valid');
+        fuenteEvento.classList.replace('is-invalid', 'is-valid');
     }
 
     // ------------------- Validar cuando se está borrando
     if((codigoTecla === 'Backspace') && (fuenteEvento.value.trim().length === 0)) {
         // ------------------- Si el input quedó vacío, es inválido
-        fuenteEvento.classList.remove('is-valid');
-        fuenteEvento.classList.add('is-invalid');
+        fuenteEvento.classList.replace('is-valid', 'is-invalid');
     }
 };
 
