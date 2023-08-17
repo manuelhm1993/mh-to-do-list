@@ -194,6 +194,7 @@ const validarSubmit = (fuenteEvento, id) => {
 
     if(fuenteEvento[id].value.trim().length === 0) {
         fuenteEvento[id].classList.add('is-invalid');
+        fuenteEvento[id].value = '';
         valido = false;
     }
 
