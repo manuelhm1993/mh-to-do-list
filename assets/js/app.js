@@ -61,6 +61,19 @@ const leerTareas = () => {
     Object.values(tareas).forEach((tarea) => {
         const clonListaTareasTemplate = listaTareasTemplate.cloneNode(true);
 
+        if(tareas[tarea.id].status) {
+            const alert = clonListaTareasTemplate.querySelector('.alert');
+    
+            if(alert.classList.contains('alert-warning')) {
+                alert.classList.remove('alert-warning');
+                alert.classList.add('alert-info');
+            }
+            else {
+                alert.classList.remove('alert-info');
+                alert.classList.add('alert-warning');
+            }
+        }
+
         clonListaTareasTemplate.querySelector('.alert h5').textContent = tareas[tarea.id].title;
 
         const pTitle = clonListaTareasTemplate.querySelector('.alert p');
@@ -71,7 +84,7 @@ const leerTareas = () => {
         // ------------------- Recorrer los botones de acción y asignarles el dataset con el id de la tarea
         clonListaTareasTemplate.querySelectorAll('.alert h3 i').forEach((tagI) => {
             // ------------------- Comprobar si la tarea está terminada
-            if((tareas[tarea.id].status)) {
+            if(tareas[tarea.id].status) {
                 // ------------------- Asignar las clases correspondientes al status
                 pTitle.classList.toggle('text-decoration-line-through');
 
@@ -96,22 +109,7 @@ const modificarStatusTarea = (botonAccion) => {
     // ------------------- Modificar el status de la tarea a terminado o no terminado
     tareas[botonAccion.dataset.idTarea].status = !tareas[botonAccion.dataset.idTarea].status;
 
-    // ------------------- Comprobar que botón de acción es, para mostrarlo u ocultarlo
-    if(botonAccion.classList.contains('fa-square')) {
-        botonAccion.classList.toggle('d-none');
-        botonAccion.previousElementSibling.classList.toggle('d-none');
-    }
-    else if(botonAccion.classList.contains('fa-square-check')) {
-        botonAccion.classList.toggle('d-none');
-        botonAccion.nextElementSibling.classList.toggle('d-none');
-    }
-
-    // ------------------- Tachar o destachar la tarea dependiendo del botón de acción
-    const cuerpoTarea = listaTareas.querySelector(`p[data-id-tarea="${botonAccion.dataset.idTarea}"]`);
-
-    cuerpoTarea.classList.toggle('text-decoration-line-through');
-
-    setTareasLocalStorage();
+    leerTareas();
 };
 
 // ------------------- Acceder a la tarea para realizar su actualización
