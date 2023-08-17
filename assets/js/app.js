@@ -13,13 +13,7 @@ let tareas = {};
 const capitalize = (word) => `${word.charAt(0).toUpperCase()}${word.toLowerCase().substring(1)}`;
 
 // ------------------- Limpia las clases de validación en el input
-const formatearTarea = (tarea, formulario = null) => {
-
-    if(!formulario) {
-        tarea.classList.remove('is-invalid', 'is-valid');
-        return;
-    }
-
+const formatearTarea = (formulario) => {
     // ------------------- Forma de iterar un formulario sin FormData
     [...formulario].forEach(input => {
         if(input.tagName !== 'BUTTON') {
@@ -131,7 +125,7 @@ const modificarTarea = (idTarea) => {
         botonAccion.textContent = 'Modificar';
         botonAccion.dataset.idTarea = idTarea;
         
-        formatearTarea(null, formulario);
+        formatearTarea(formulario);
     }
 };
 
@@ -159,7 +153,7 @@ const actualizarTarea = (botonAccion) => {
     botonAccion.removeAttribute('data-id-tarea');
 
     leerTareas();
-    formatearTarea(null, formulario);
+    formatearTarea(formulario);
     tituloTarea.focus();
 };
 
@@ -238,7 +232,7 @@ const submit = (e) =>{
     }
 
     crearTarea(fuenteEvento);
-    formatearTarea(null, fuenteEvento);
+    formatearTarea(fuenteEvento);
 
     fuenteEvento.reset();
     fuenteEvento['titulo-tarea'].focus();
