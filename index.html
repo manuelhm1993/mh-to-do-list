@@ -14,7 +14,8 @@
             <h1 class="text-center my-3">MHenriquez - TODO APP</h1>
 
             <form id="formulario" name="formulario" action="#">
-                <input type="text" class="form-control my-2" name="tarea" id="tarea" placeholder="Escribir tarea" autofocus>
+                <input type="text" class="form-control my-2" name="titulo-tarea" id="titulo-tarea" placeholder="Título de la tarea" autofocus>
+                <input type="text" class="form-control my-2" name="tarea" id="tarea" placeholder="Cuerpo de la tarea">
                 <p class="invalid-feedback">La tarea no puede estar vacía</p>
 
                 <div class="d-grid gap-2 col-12 col-sm-1 mb-3">
@@ -28,10 +29,11 @@
 
     <template id="lista-tareas-template">
         <!-- Uso de flexbox para separar ambas cajas a izquierda y derecla del contenedor y centrar verticalmente -->
-        <div class="alert alert-warning my-2 d-flex justify-content-between align-items-center">
-            <p class="m-0">Tarea #1</p>
-            <!-- TODO: agregar el body al formulario -->
-            <!-- <p class="m-0">Body</p> -->
+        <div class="alert alert-warning my-2 d-flex justify-content-between align-items-center" role="alert">
+            <div class="m-0">
+                <h5 class="alert-heading m-0">Well done!</h5>
+                <p class="m-0">Tarea #1</p>
+            </div>
 
             <h3 class="m-0">
                 <!-- Solicitado por Fanny -->
